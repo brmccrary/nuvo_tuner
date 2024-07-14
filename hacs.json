@@ -1,0 +1,10 @@
+{
+  "name": "Nuvo Tuner",
+  "render_readme": true,
+  "country": "EN",
+  "domains": ["media_player"],
+  "homeassistant": "2022.9.0",
+  "iot_class": ["Local Push"],
+  "zip_release": true,
+  "filename": "nuvo_tuner.zip"
+}
