@@ -131,6 +131,8 @@ While Home Assistant will auto-create Lovelace media control and number cards fo
 
 This example Lovelace configuration displays the extar tuner settings in a [Conditional](https://www.home-assistant.io/lovelace/conditional/) card that is only displayed when the tuner is switched on and an input_boolean entity is True.  This input_boolean is toggled by tapping the mini-media-player representing the tuner.  In order to achieve this, an additional input_boolean entity per tuner needs manually created (it's purely to control the frontend Conditional card, it doesn't represent anything on the Nuvo itself).
 
+In order to have an input box to tune directly to a desired channel, a script and an input text entity must be made.
+
 e.g. In configuration.yaml:
 
 ```yaml
@@ -143,19 +145,50 @@ input_boolean:
     name: Tuner B extra settings
     initial: off
 
+input_text:
+  tuner_a_channel:
+    name: Tune to
+  tuner_b_channel:
+    name: Tune to
+
 ```
 
 Will create the entities:
 ```
 input_boolean.tuner_a_extra_settings
 input_boolean.tuner_b_extra_settings
+input_text.tuner_a_channel
+input_text.tuner_b_channel
+```
+In scripts.yaml
+```yaml
+tune_tuner_a_to_input_text:
+  alias: Tune Tuner A to input text
+  sequence:     
+  - service: media_player.play_media
+    data:
+      media_content_id: '{{states(''input_text.tuner_a_channel'') }}'
+      media_content_type: '-'          
+    target:   
+      entity_id: media_player.nuvo_tuner_a
+  mode: single         
+tune_tuner_b_to_input_text:
+  alias: Tune Tuner B to input text
+  sequence:
+  - service: media_player.play_media
+    data:
+      media_content_id: '{{states(''input_text.tuner_b_channel'') }}'
+      media_content_type: '-'          
+    target:
+      entity_id: media_player.nuvo_tuner_a
 ```
 
 As shown the yaml section below, the [tap action](https://github.com/kalkih/mini-media-player#action-object-options) on each mini-media-player will call the input_boolean.toggle service.
 
-Here is a Vertical Stack card configuration:
+Here is the card using a custom Vertical Stack-In card.  
+You could just use the normal Vertical Stack card as well.
 ```yaml
-type: vertical-stack
+type: custom:vertical-stack-in-card
 cards:
   - type: entities
     entities:
@@ -198,6 +231,8 @@ cards:
           action: none
         double_tap_action:
           action: none
+    theme: slate_red
+    show_header_toggle: false
   - type: conditional
     conditions:
       - entity: media_player.nuvo_tuner_a
