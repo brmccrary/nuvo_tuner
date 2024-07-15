@@ -1,8 +1,7 @@
 {
   "name": "Nuvo Tuner",
   "render_readme": true,
-  "country": "EN",
-  "domains": ["media_player"],
+  "country": "ALL",
   "homeassistant": "2022.9.0",
   "iot_class": ["Local Push"],
   "zip_release": true,
