@@ -6,6 +6,7 @@
   "codeowners": ["@brmccrary"],
   "dependencies": ["http"],
   "requirements": ["pyserial>=3.4", "nuvo-tuner==1.0"],
+  "integration_type": "hub",
   "version": "v1.0",
   "iot_class": "local_push"
 }
