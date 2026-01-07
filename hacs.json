@@ -4,6 +4,5 @@
   "country": "ALL",
   "homeassistant": "2022.9.0",
   "zip_release": true,
-  "content_in_root": true,
   "filename": "nuvo_tuner.zip"
 }
