@@ -39,27 +39,34 @@ In the repository field, enter: https://github.com/brmccrary/nuvo_tuner
 In the Category field, select Integration. 
 
 The integration will now show up as nuvo_tuner under integrations inside HACS.  Click on it and Download.
- 
+
 ## Configuration:
 
-Configuration must be done through configuration.yaml, no GUI option is available for now.
+Configuration is done through the Home Assistant UI — no configuration.yaml editing required.
 
-The only required configuration is just a port where the tuner can be accessed.
-The track option gives 3 ways to set up the media track buttons.  They are:
+After installing via HACS, go to **Settings → Integrations → Add Integration** and search for **Nuvo Tuner**.  The setup wizard will ask for:
 
-* tune: Tune to the station one channel at a time
-* seek: Seek to the next or previous station found
-* preset: Go to the next or previous preset saved on the tuner
+* **Serial Port** (required) — the port or socket where the tuner can be accessed, e.g. `/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_D-if00-port0` or `socket://192.168.1.x:59001`
+* **Baud Rate** (optional, default 57600)
+* **Track Button Mode** (optional, default seek) — controls what the previous/next track buttons do:
+  * `tune` — tune one channel at a time
+  * `seek` — seek to the next or previous station found
+  * `preset` — go to the next or previous preset saved on the tuner
 
-Example:
+To change settings after setup, go to **Settings → Integrations → Nuvo Tuner → Configure**.
+
+### Legacy configuration.yaml setup (deprecated):
+
+The integration can still be configured via configuration.yaml, however this method is deprecated and may be removed in a future release.  If you are currently using this method, it is recommended to remove it from configuration.yaml and use the UI wizard instead.
+
 ~~~
 media_player:
   - platform: nuvo_tuner
     baud: 57600 # Optional (57600 is default)
     port: /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_D-if00-port0
     track: preset # Optional, defaults to seek.  Can be one of tune, seek, or preset
-
 ~~~
+
 ## How to use when the serial port is on another machine:
 
 You can use the program ncat, available on most Linux distros, as a way to access the Nuvo across the LAN if it's on a different machine.
@@ -104,10 +111,7 @@ Run the following to start the new "nuvonet" service:
 systemctl enable nuvonet
 systemctl start nuvonet
 ~~~
-Change the port setting in configuration.yaml to:
-~~~
-port: socket://<yournuvohost>:59001
-~~~
+Then enter `socket://<yournuvohost>:59001` as the Serial Port in the setup wizard.
 
 **IMPORTANT**  This has no security at all, so anyone could connect, in this case, to port 59001 and control your Nuvo.  Do not expose this port to the outside.  
 
