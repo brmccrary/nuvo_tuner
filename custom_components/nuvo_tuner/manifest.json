@@ -2,12 +2,12 @@
   "domain": "nuvo_tuner",
   "name": "Nuvo Tuner",
   "codeowners": ["@brmccrary"],
+  "config_flow": true,
   "dependencies": ["http", "zeroconf"],
   "documentation": "https://github.com/brmccrary/nuvo_tuner",
-  "config_flow": true,
   "integration_type": "hub",
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/brmccrary/nuvo_tuner/issues",
   "requirements": ["pyserial>=3.4", "nuvo-tuner==1.1.0"],
   "version": "1.1.1"
-  }
+}
