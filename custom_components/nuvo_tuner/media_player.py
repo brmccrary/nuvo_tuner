@@ -109,7 +109,7 @@ class NuvoTuner(MediaPlayerEntity):
 
     async def async_added_to_hass(self) -> None:
         self._nuvo.add_callback(self._update_callback, self._tuner)
-        self.update()
+        await self.hass.async_add_executor_job(self.update)
 
     @callback
     def _update_callback(self):
