@@ -1,4 +1,4 @@
-# nuvo_tuner
+# Nuvo Tuner
 Home Assistant custom component integration to control Nuvo tuners (currently only the NV-T2SIR).
 
 ## What this Integration does:
@@ -18,10 +18,6 @@ Since Home Assistant was not really designed with a tuner like this in mind, the
 * AM - Tunes to the AM band
 * FM - Tunes to the FM band
 * SR - Tunes to the Sirius band
-
-## Known issues:
-
-Warning in the logs from Home Assistant: "Detected blocking call to sleep inside the event loop."  I know this is due to the fact the serial port is used, but have not researched in further.  In my experience this does not cause any problems, and this generally only when the main configuration is read.
 
 ## Connecting to the Nuvo:
 Connection to the Nuvo is by an RS232 serial port from the host running Home Assistant to the tuner's serial port, either by using a USB to RS232 converter, or by using a RS232 port directly on the host.  If using a USB to RS232 converter, I would recommend using the full name instead of "/dev/ttyUSB0" as if you have more than one serial port that device can change.  You can find the full name by looking in /dev/serial/by-id.  For instance, "/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_D-if00-port0".
@@ -344,3 +340,4 @@ cards:
 This configuration will display the card below (except with your own theme, which is probably different than mine), with the extra tuner settings card toggled by tapping on the media player, in any area not containing a control:
 
 ![Lovelace](images/lovelaceui.png)
+
