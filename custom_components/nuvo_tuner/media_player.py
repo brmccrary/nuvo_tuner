@@ -3,28 +3,19 @@
 import logging
 import voluptuous as vol
 
-from homeassistant.components import zeroconf
-from homeassistant.exceptions import ConfigEntryNotReady, ConfigEntryAuthFailed
-from homeassistant.helpers import config_validation as cv, entity_platform, \
-     service, discovery
-
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.components.media_player import (DOMAIN, PLATFORM_SCHEMA, \
+from homeassistant.components.media_player import (DOMAIN, PLATFORM_SCHEMA,
     MediaPlayerEnqueue, MediaPlayerEntity, MediaPlayerEntityFeature)
-from homeassistant.config_entries import ConfigEntry, ConfigEntryState, \
-    SOURCE_IMPORT
-from homeassistant.const import (
-    ATTR_ENTITY_ID, CONF_NAME, CONF_PORT, STATE_OFF, STATE_PLAYING)
-from homeassistant.helpers import config_validation as cv, entity_platform, \
-    service, discovery
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import (CONF_NAME, CONF_PORT, STATE_OFF, STATE_PLAYING)
+from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.util import dt as dt_util
 from typing import Any
 from serial import SerialException
 from nuvo_tuner import get_nuvo
 
-NUVO = 'nuvo_tuner'
+from . import DOMAIN as NUVO_DOMAIN
+
 DATA_NUVO = 'nuvo_tuner'
 CONF_SOURCES = 'sources'
 CONF_PORT = 'port'
@@ -50,7 +41,14 @@ SUPPORT_NUVO =  MediaPlayerEntityFeature.TURN_ON | \
                 MediaPlayerEntityFeature.PREVIOUS_TRACK | \
                 MediaPlayerEntityFeature.NEXT_TRACK
 
-# async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback) -> None:
+    nuvo = hass.data[NUVO_DOMAIN][entry.entry_id]
+    async_add_entities([
+        NuvoTuner(hass, nuvo, 'A', 'Nuvo Tuner A', entry.entry_id),
+        NuvoTuner(hass, nuvo, 'B', 'Nuvo Tuner B', entry.entry_id),
+    ], True)
+
+
 def setup_platform(hass, config, add_entities, discovery_info=None):
     port = config.get(CONF_PORT)
     baud = config.get(CONF_BAUD)
@@ -58,35 +56,39 @@ def setup_platform(hass, config, add_entities, discovery_info=None):
     hass.data[DATA_NUVO] = []
 
     try:
-        global NUVO
-        NUVO = get_nuvo(port, baud, track)
+        nuvo = get_nuvo(port, baud, track)
     except SerialException:
         _LOGGER.error("Error opening serial port")
         return False
 
-    model = NUVO.get_model()
+    model = nuvo.get_model()
     if model == 'Unknown':
         _LOGGER.error('This does not appear to be a supported Nuvo device.')
     else:
         _LOGGER.info('Detected Nuvo tuner %s', model)
 
-    hass.data[DATA_NUVO].append(NuvoTuner(hass,
-       NUVO, 'A', 'Nuvo Tuner A'))
-    hass.data[DATA_NUVO].append(NuvoTuner(hass,
-       NUVO, 'B', 'Nuvo Tuner B'))
+    hass.data[DATA_NUVO].append(NuvoTuner(hass, nuvo, 'A', 'Nuvo Tuner A'))
+    hass.data[DATA_NUVO].append(NuvoTuner(hass, nuvo, 'B', 'Nuvo Tuner B'))
 
     add_entities(hass.data[DATA_NUVO], True)
 
 class NuvoTuner(MediaPlayerEntity):
     """Representation of a Nuvo tuner."""
 
-    def __init__(self, hass: HomeAssistant, nuvo, tuner, tuner_name):
+    def __init__(self, hass: HomeAssistant, nuvo, tuner, tuner_name, entry_id=None):
         """Initialize new tuner."""
         self._nuvo = nuvo
         self._name = tuner_name
         self._tuner = tuner
         self._state = None
         self._source = None
+        self._entry_id = entry_id
+
+    @property
+    def unique_id(self):
+        if self._entry_id:
+            return f"{self._entry_id}_{self._tuner}"
+        return None
 
     def update(self):
         """Retrieve latest state."""
@@ -201,3 +203,4 @@ class NuvoTuner(MediaPlayerEntity):
     def turn_off(self):
         """Turn the media player off."""
         self._nuvo.set_power(False)
+
