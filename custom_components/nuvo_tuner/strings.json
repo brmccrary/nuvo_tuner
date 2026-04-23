@@ -1,0 +1,25 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Nuvo Tuner",
+        "data": {
+          "port": "Serial Port",
+          "baud": "Baud Rate",
+          "track": "Track Button Mode"
+        },
+        "data_description": {
+          "port": "Serial port or socket (e.g. /dev/ttyUSB0 or socket://host:port)",
+          "track": "What the previous/next track buttons do: seek, tune, or preset"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot connect to the serial port. Check the port and try again.",
+      "cannot_detect_model": "Connected but device was not recognized as a Nuvo tuner."
+    },
+    "abort": {
+      "already_configured": "This device is already configured."
+    }
+  }
+}
