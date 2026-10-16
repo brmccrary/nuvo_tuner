@@ -13,8 +13,8 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.storage import Store
 from typing import Any
-from serial import SerialException
-from nuvo_tuner import get_nuvo
+from serialx import SerialException
+from .tuner import get_nuvo
 
 STORAGE_VERSION = 1
 STORAGE_KEY = "nuvo_tuner_sources"

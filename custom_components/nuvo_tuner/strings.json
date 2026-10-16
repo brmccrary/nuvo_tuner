@@ -9,7 +9,7 @@
           "track": "Track Button Mode"
         },
         "data_description": {
-          "port": "Serial port or socket (e.g. /dev/ttyUSB0 or socket://host:port)",
+          "port": "Pick a serial port, or type a path or URL (e.g. /dev/ttyUSB0 or socket://host:port)",
           "track": "What the previous/next track buttons do: seek, tune, or preset"
         }
       }
@@ -20,6 +20,24 @@
     },
     "abort": {
       "already_configured": "This device is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Nuvo Tuner Connection",
+        "data": {
+          "port": "Serial Port",
+          "baud": "Baud Rate",
+          "track": "Track Button Behavior"
+        },
+        "data_description": {
+          "port": "Pick a serial port, or type a path or URL. Changing this moves the tuner to another port."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect"
     }
   }
 }
