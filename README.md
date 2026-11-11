@@ -22,7 +22,10 @@ Since Home Assistant was not really designed with a tuner like this in mind, the
 ## Connecting to the Nuvo:
 Connection to the Nuvo is by an RS232 serial port from the host running Home Assistant to the tuner's serial port, either by using a USB to RS232 converter, or by using a RS232 port directly on the host.  If using a USB to RS232 converter, I would recommend using the full name instead of "/dev/ttyUSB0" as if you have more than one serial port that device can change.  You can find the full name by looking in /dev/serial/by-id.  For instance, "/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_D-if00-port0".
 
-The tuner can also be connected over the network with an [ESPHome serial proxy](https://www.home-assistant.io/blog/2026/05/06/release-20265/#serial-ports-over-the-network-with-esphome): wire the tuner to one of the device's RS-232 ports (if the tuner does not answer, the RX/TX lines may need swapping), add the device through the ESPHome integration, and its ports appear in the Serial Port picker during setup.
+### Home Assistant Connect AUX-2
+The tuner can also be connected over the network with a [Home Assistant Connect AUX-2](https://www.home-assistant.io/connect/aux-2/) ([announcement](https://www.home-assistant.io/blog/2026/11/11/no-device-left-behind-home-assistant-connect-aux-2/)), which is supported and tested (an NV-T2SIR runs on one in daily use). Wire the tuner to one of the AUX-2's RS-232 ports, add the AUX-2 through the ESPHome integration, and its ports appear in the Serial Port picker during setup (e.g. "RS-232 Port 1"). If the tuner does not answer, the RX/TX lines may need swapping.
+
+Any other [ESPHome serial proxy](https://www.home-assistant.io/blog/2026/05/06/release-20265/#serial-ports-over-the-network-with-esphome) works the same way.
 
 ## Installing:
 
@@ -51,7 +54,7 @@ Configuration is done through the Home Assistant UI — no configuration.yaml ed
 
 After installing via HACS, go to **Settings → Integrations → Add Integration** and search for **Nuvo Tuner**.  The setup wizard will ask for:
 
-* **Serial Port** (required) — pick the port from the list (local serial ports and network ports such as an ESPHome serial proxy's RS-232 ports), or enter a path or `socket://` URL manually, e.g. `/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_D-if00-port0` or `socket://192.168.1.x:59001`
+* **Serial Port** (required) — pick the port from the list (local serial ports and network ports such as a Home Assistant Connect AUX-2's RS-232 ports or another ESPHome serial proxy), or enter a path or `socket://` URL manually, e.g. `/dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller_D-if00-port0` or `socket://192.168.1.x:59001`
 * **Baud Rate** (optional, default 57600)
 * **Track Button Mode** (optional, default seek) — controls what the previous/next track buttons do:
   * `tune` — tune one channel at a time
